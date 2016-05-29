@@ -236,6 +236,15 @@ def getdata_with_firsttype_and_city():
     all_data['totalcount_in_every_city_bar_chart_data']['seriesData'] = data
 
 
+def clean_database_in_education():
+    conn = sqlite3.connect('test.db')
+    cmd = 'UPDATE lagou set education="中专/高中" where (education="中专" or education="高中")'
+    print '>>> cmd:', cmd
+    conn.execute(cmd)
+    conn.commit()
+    conn.close()
+
+
 # 只有一个条件，得到总计数。为了后面画扇形图
 def getdata_with_one_condition(condition, order_list, name):
     # print ','.join(order_list)
@@ -256,7 +265,7 @@ def getdata_with_one_condition(condition, order_list, name):
     for size_type in order_list:
         tmp_dict = {}
         tmp_dict['name'] = size_type
-        # print size_type
+        print size_type
         tmp_dict['value'] = fetchresult_dict[size_type.decode('utf-8')]
         data.append(tmp_dict)
     # print data
@@ -306,7 +315,6 @@ def draw10_education_pie_chart(condition):
     getdata_with_one_condition(condition, education_list, 'education_pie_chart_data')   
 
 
-
 def draw01_position_pie_chart():
     all_data['position_pie_chart_data'] = {}
     # 图例
@@ -318,7 +326,6 @@ def draw01_position_pie_chart():
     # print all_data
 
 
-
 def draw02_totalcount_in_every_city_bar_chart():
     all_data['totalcount_in_every_city_bar_chart_data'] = {}
     all_data['totalcount_in_every_city_bar_chart_data']['legend'] = first_type_list
@@ -326,14 +333,13 @@ def draw02_totalcount_in_every_city_bar_chart():
     getdata_with_firsttype_and_city()
 
 
-
-
-
 def draw05_city_and_salary_punchcard():
     all_data['city_and_salary_punchcard_data'] = {}
     all_data['city_and_salary_punchcard_data']['x_series'] = salary_list
-    all_data['city_and_salary_punchcard_data']['y_series'] = ['北京', '上海', '杭州', '深圳', '杭州', '广州', '成都']
-    all_data['city_and_salary_punchcard_data']['y_series'].reverse()
+    all_data['city_and_salary_punchcard_data']['y_series'] = ['北京', '上海', '杭州', '深圳', '杭州', '广州', '成都'][::-1]
+    # all_data['city_and_salary_punchcard_data']['y_series'].reverse()
+    # 为什么这里要取倒序？因为根据ECharts示例，对于传入option的图例数组，他是把它按照y轴正方向排的（也就是纵方向从下到上）
+    # 千万注意不能像上面那样用reverse()，因为这是对数组本身操作了，不会返回新数组而是改变了原数组。而这些数组在本程序其他地方也有可能用到，所以要保留好原来的
 
     x_series_list = all_data['city_and_salary_punchcard_data']['x_series']
     y_series_list = all_data['city_and_salary_punchcard_data']['y_series']
@@ -344,8 +350,7 @@ def draw05_city_and_salary_punchcard():
 def draw06_positiontype_and_salary_punchcard():
     all_data['positiontype_and_salary_punchcard_data'] = {}
     all_data['positiontype_and_salary_punchcard_data']['x_series'] = salary_list
-    all_data['positiontype_and_salary_punchcard_data']['y_series'] = first_type_list
-    all_data['positiontype_and_salary_punchcard_data']['y_series'].reverse()
+    all_data['positiontype_and_salary_punchcard_data']['y_series'] = first_type_list[::-1]
 
     x_series_list = all_data['positiontype_and_salary_punchcard_data']['x_series']
     y_series_list = all_data['positiontype_and_salary_punchcard_data']['y_series']
@@ -356,8 +361,7 @@ def draw06_positiontype_and_salary_punchcard():
 def draw07_education_and_salary_punchcard():
     all_data['education_and_salary_punchcard_data'] = {}
     all_data['education_and_salary_punchcard_data']['x_series'] = salary_list
-    all_data['education_and_salary_punchcard_data']['y_series'] = education_list
-    all_data['education_and_salary_punchcard_data']['y_series'].reverse()
+    all_data['education_and_salary_punchcard_data']['y_series'] = education_list[::-1]
 
     x_series_list = all_data['education_and_salary_punchcard_data']['x_series']
     y_series_list = all_data['education_and_salary_punchcard_data']['y_series']
@@ -368,8 +372,7 @@ def draw07_education_and_salary_punchcard():
 def draw08_workyear_and_salary_punchcard():
     all_data['workyear_and_salary_punchcard_data'] = {}
     all_data['workyear_and_salary_punchcard_data']['x_series'] = salary_list
-    all_data['workyear_and_salary_punchcard_data']['y_series'] = workyear_list
-    all_data['workyear_and_salary_punchcard_data']['y_series'].reverse()
+    all_data['workyear_and_salary_punchcard_data']['y_series'] = workyear_list[::-1]
 
     x_series_list = all_data['workyear_and_salary_punchcard_data']['x_series']
     y_series_list = all_data['workyear_and_salary_punchcard_data']['y_series']
@@ -380,18 +383,12 @@ def draw08_workyear_and_salary_punchcard():
 def draw09_developmentstage_and_salary_punchcard():
     all_data['developmentstage_and_salary_punchcard_data'] = {}
     all_data['developmentstage_and_salary_punchcard_data']['x_series'] = salary_list
-    all_data['developmentstage_and_salary_punchcard_data']['y_series'] = developmentstage_list
-    all_data['developmentstage_and_salary_punchcard_data']['y_series'].reverse()
+    all_data['developmentstage_and_salary_punchcard_data']['y_series'] = developmentstage_list[::-1]
 
     x_series_list = all_data['developmentstage_and_salary_punchcard_data']['x_series']
     y_series_list = all_data['developmentstage_and_salary_punchcard_data']['y_series']
 
     getdata_for_punchcard(x_series_list, y_series_list, 'developmentstage_and_salary_punchcard_data', 'developmentStage')
-
-
-
-
-
 
 
 def analyse():
@@ -400,30 +397,57 @@ def analyse():
     newDB()
     # 在表"lagou"中增加一列
     add_column_developmentStage()
+    # 把education那一列中的“中专”和“高中”合并为“中专/高中”
+    clean_database_in_education()
 
-
-    draw03_company_size_pie_chart('companySize')
-    draw04_finance_stage_pie_chart('financeStage')    
-    draw10_education_pie_chart('education')
-    
+    print '----------- draw01 BEGIN -----------'
     draw01_position_pie_chart()
-    draw02_totalcount_in_every_city_bar_chart()
+    print '----------- draw01 END -----------'
 
+    print '----------- draw02 BEGIN -----------'
+    draw02_totalcount_in_every_city_bar_chart()
+    print '----------- draw02 END -----------'
+
+    print '----------- draw03 BEGIN -----------'
+    draw03_company_size_pie_chart('companySize')
+    print '----------- draw03 END -----------'
+
+    print '----------- draw04 BEGIN -----------'
+    draw04_finance_stage_pie_chart('financeStage')    
+    print '----------- draw04 END -----------'
+
+    print '----------- draw05 BEGIN -----------'
     draw05_city_and_salary_punchcard()
+    print '----------- draw05 END -----------'
+
+    print '----------- draw06 BEGIN -----------'
     draw06_positiontype_and_salary_punchcard()
+    print '----------- draw06 END -----------'
+
+    print '----------- draw07 BEGIN -----------'
     draw07_education_and_salary_punchcard()
+    print '----------- draw07 END -----------'
+
+    print '----------- draw08 BEGIN -----------'
     draw08_workyear_and_salary_punchcard()
+    print '----------- draw08 END -----------'
+    
+    print '----------- draw09 BEGIN -----------'
     draw09_developmentstage_and_salary_punchcard()
+    print '----------- draw09 END -----------'
+
+    print '----------- draw10 BEGIN -----------'
+    draw10_education_pie_chart('education')
+    print '----------- draw10 END -----------'    
 
     # 之后这个这个JS文件会被当做全局变量引入HTML中
     with open('results_dict.js', 'a+') as f:
         f.write('var allData = ')
         f.write(json.dumps(all_data))
         f.write(';\n')
-    
+
 
 
 if __name__ == '__main__':
     analyse()
-
-
+    print '=========== 已完成 ============'
