@@ -1,0 +1,93 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(252, 250, 245);
+    word-wrap: break-word;
+    line-height: 1.4em;
+}
+a:hover {
+    text-decoration: none;
+}
+/* header */
+header {
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 0px;
+    border-bottom: none;
+    height: 70px;
+    line-height: 70px;
+    background-color: #435a6b;
+}
+nav {
+    text-align: center;
+}
+nav a {
+    font-size: 18px;
+    height: 45px;
+    line-height: 45px;
+    margin: 0 10%;
+    color: white;
+    background-color: #587285;
+    /* padding: 8px 18px; */
+    padding: 8px 5%;
+    border-left: 2px solid #2f4351;
+    border-right: 2px solid #2f4351;;
+}
+nav a:hover {
+    border: 2px solid white;
+    background-color: white;
+    color: #2f4351;
+}
+.container-fluid {
+    max-width: 1000px;
+    width: 90%;
+    margin: 0 auto;
+}
+nav>a:first-child {
+    margin-left: 0;
+}        
+nav>a:last-child {
+    margin-right: 0;
+}
+/* artical */
+article {
+    padding: 30px;
+    background-color: white;
+    border-radius: 2px;
+    border: 0;
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+}
+div[class^="draw"] {
+    margin: 16px 0;
+}
+div.intro p{
+    padding-left: 10px;
+    border-left: 3px #eee solid;
+}
+div.author a {
+    color: #587285;
+    font-size: 0.9em;
+}
+div.description {
+    border-bottom: 1px #eee solid;
+}
+/* footer */
+footer {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+footer div, footer a{
+    background-color: #587285;
+}
+footer div {
+    color: #2f4351;
+}
+footer a {
+    color: white;
+    margin: 5px;
+    padding: 5px 0;
+}
+footer a:hover {
+    border-bottom: 2px white solid;
+}
