@@ -45,46 +45,57 @@ all_data = {}
 
 def newDB():
     print '新建表...'
-    conn_new = sqlite3.connect('test.db')
-    conn_new.text_factory = str
-    cursor_new = conn_new.cursor()
-    cursor_new.execute(
-        '''CREATE TABLE IF NOT EXISTS 
-               totalcount(
-               id INTEGER PRIMARY KEY, positionFirstType TEXT, \
-               positionType TEXT, city TEXT, totalCount INTEGER
-           )
-    ''')
-    cursor_new.close()
-    conn_new.commit()
-    conn_new.close()
-    print '表"totalcount"初始化完毕...'
+    conn = sqlite3.connect('test.db')
+    conn.text_factory = str
+    cursor = conn.cursor()
+    try:
+        # 测试到底存在不存在totalcount，因为第二次运行时就存在了，而这个表里面没有能够UNIQUE的，所以必须先判断，否则就会犯重复添加数的错误
+        cmd = 'select * from totalcount where city="上海"'
+        cursor.execute(cmd)
+        return False
+    except sqlite3.Error, e:
+        print 'sqlite3 error: ', cmd, e
+        # 如果存在此列，则跳过。防止第二次运行此函数时出错
+        if re.search('no such table', str(e), flags=0):
+            print 'totalcount尚未存在，所以现在在建立这张表'
+    
+        cursor.execute(
+            '''CREATE TABLE IF NOT EXISTS 
+                   totalcount(
+                   id INTEGER PRIMARY KEY, positionFirstType TEXT, \
+                   positionType TEXT, city TEXT, totalCount INTEGER
+               )
+        ''')
+        cursor.close()
+        conn.commit()
+        conn.close()
+        print '表"totalcount"初始化完毕...'
 
-    for position_first_type in all_job_dict:
-        position_type_list = all_job_dict[position_first_type]
-        for i in range(len(position_type_list)):
-            this_specific_type = position_type_list[i]
-            for j in range(len(all_city_list)):
-                this_city = all_city_list[j]
-                total_count = total_count_for_city_and_positiontype(this_city, this_specific_type)
-                try:
-                    conn = sqlite3.connect('test.db')
-                    conn.text_factory = str
-                    cursor = conn.cursor()
-                    # print '开始写入数据库'
-                    cursor.execute(
-                        '''INSERT INTO
-                                totalcount(
-                                id, positionFirstType, positionType, city, totalCount)
-                            VALUES(NULL, ?, ?, ?, ?)
-                        ''',
-                        [position_first_type, this_specific_type, this_city, total_count])
-                    cursor.close()
-                    conn.commit()
-                    conn.close()
-                    # print '数据库已关闭，此条记录已入库'
-                except sqlite3.Error, e:
-                    print 'data exists:', positionType, city, e
+        for position_first_type in all_job_dict:
+            position_type_list = all_job_dict[position_first_type]
+            for i in range(len(position_type_list)):
+                this_specific_type = position_type_list[i]
+                for j in range(len(all_city_list)):
+                    this_city = all_city_list[j]
+                    total_count = total_count_for_city_and_positiontype(this_city, this_specific_type)
+                    try:
+                        conn = sqlite3.connect('test.db')
+                        conn.text_factory = str
+                        cursor = conn.cursor()
+                        # print '开始写入数据库'
+                        cursor.execute(
+                            '''INSERT INTO
+                                    totalcount(
+                                    id, positionFirstType, positionType, city, totalCount)
+                                VALUES(NULL, ?, ?, ?, ?)
+                            ''',
+                            [position_first_type, this_specific_type, this_city, total_count])
+                        cursor.close()
+                        conn.commit()
+                        conn.close()
+                        # print '数据库已关闭，此条记录已入库'
+                    except sqlite3.Error, e:
+                        print 'data exists:', positionType, city, e
 
 
 def add_column_developmentStage():

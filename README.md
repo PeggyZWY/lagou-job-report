@@ -18,6 +18,7 @@
 3. 在SQLite中新增一列：`ALTER TABLE table-name ADD COLUMN column-name column-type`  
 4. SQLite不支持删除列的操作（好坑啊。。。）。  
    一种替代方法是：1）根据原表创建一张新表；2）删除原表；3）将新表重名为旧表的名称  
+5. 在要新建表或者表里新建列的时候要特别注意检查之前是不是已经存在了，犯了这个错  
 
      
 ### Python及爬虫 
